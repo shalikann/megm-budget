@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stanford MEGM · Budget & Proposals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2F4F6; --surface:#FFFFFF; --ink:#18212B; --graphite:#5A6470; --rule:#D3D9E0; --grid:rgba(24,33,43,.045);
+  --cardinal:#8C1515; --cardinal-ink:#FFFFFF; --cardinal-soft:#F5E3E3;
+  --ok:#2C6A4D; --ok-soft:#E1F0E8; --wait:#9A630E; --wait-soft:#F7ECD8; --bad:#A32020;
+  --track:#E4E8EC;
+  color-scheme:light;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --paper:#12161B; --surface:#1A2027; --ink:#E5E9EE; --graphite:#9AA4AF; --rule:#2E3741; --grid:rgba(229,233,238,.04);
+  --cardinal:#E0625E; --cardinal-ink:#1A0B0B; --cardinal-soft:#3A1E1F;
+  --ok:#6CC59A; --ok-soft:#183126; --wait:#E3AC55; --wait-soft:#352915; --bad:#F07873; --track:#262E37; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#12161B; --surface:#1A2027; --ink:#E5E9EE; --graphite:#9AA4AF; --rule:#2E3741; --grid:rgba(229,233,238,.04);
+  --cardinal:#E0625E; --cardinal-ink:#1A0B0B; --cardinal-soft:#3A1E1F;
+  --ok:#6CC59A; --ok-soft:#183126; --wait:#E3AC55; --wait-soft:#352915; --bad:#F07873; --track:#262E37; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 "Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;min-height:100%}
+h1,h2,h3{font-family:Archivo,"Arial Narrow",system-ui,sans-serif;line-height:1.1;margin:0}
+.num{font-variant-numeric:tabular-nums}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--cardinal);outline-offset:2px}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+[hidden]{display:none!important}
+
+/* lock screen */
+#lock{min-height:100vh;display:grid;place-items:center;padding:32px 20px}
+.lockbox{width:min(440px,100%)}
+.mark{font-family:Archivo,sans-serif;font-variation-settings:"wdth" 125;font-weight:800;font-size:clamp(64px,16vw,112px);letter-spacing:-.02em;line-height:.9;color:var(--cardinal);margin:0}
+.lockbox p.sub{font-family:Archivo,sans-serif;font-variation-settings:"wdth" 75;font-size:20px;font-weight:500;margin:10px 0 28px;color:var(--ink)}
+.field{display:grid;gap:6px;margin-bottom:16px}
+.field label{font-weight:600;font-size:15px}
+.field .hint{font-size:13.5px;color:var(--graphite)}
+input[type=text],input[type=password],input[type=number],input[type=date],select,textarea{width:100%;padding:10px 12px;border:1px solid var(--rule);border-radius:6px;background:var(--surface)}
+textarea{min-height:96px;resize:vertical}
+input[readonly]{background:var(--track);color:var(--graphite)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:6px;border:1px solid var(--rule);background:var(--surface);cursor:pointer;font-weight:600}
+.btn.primary{background:var(--cardinal);border-color:var(--cardinal);color:var(--cardinal-ink)}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.btn.danger{color:var(--bad);border-color:currentColor;background:transparent}
+.btn.small{padding:6px 11px;font-size:14px}
+.btn.link{border:none;background:none;padding:4px 2px;color:var(--cardinal);text-decoration:underline}
+.btn:disabled{opacity:.55;cursor:progress}
+.err{color:var(--bad);font-size:14.5px;min-height:1.4em;margin:8px 0 0}
+.msg{padding:12px 14px;border-radius:6px;background:var(--ok-soft);color:var(--ink);border-left:4px solid var(--ok);margin:12px 0}
+.msg.warn{background:var(--wait-soft);border-left-color:var(--wait)}
+
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--rule)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.topin{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:14px;padding-bottom:0;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:12px}
+.brand b{font-family:Archivo,sans-serif;font-variation-settings:"wdth" 125;font-weight:800;font-size:26px;color:var(--cardinal);letter-spacing:-.01em}
+.brand span{font-family:Archivo,sans-serif;font-variation-settings:"wdth" 75;color:var(--graphite);font-size:15px}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;margin-top:10px}
+nav.tabs button{border:none;background:none;padding:10px 14px;cursor:pointer;font-weight:600;color:var(--graphite);border-bottom:3px solid transparent;white-space:nowrap}
+nav.tabs button[aria-current="true"]{color:var(--ink);border-bottom-color:var(--cardinal)}
+.subtabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}
+.subtabs button{border:1px solid var(--rule);background:var(--surface);border-radius:999px;padding:6px 14px;cursor:pointer;font-weight:600;font-size:14.5px}
+.subtabs button[aria-current="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+main{padding:28px 0 64px}
+section.view h2{font-size:30px;font-variation-settings:"wdth" 90;font-weight:700;margin-bottom:6px}
+section.view > p.lede{color:var(--graphite);margin:0 0 24px;max-width:62ch}
+
+/* gauges — the signature element */
+.total{display:flex;flex-wrap:wrap;gap:8px 28px;align-items:baseline;padding:18px 20px;background:var(--surface);border:1px solid var(--rule);border-radius:8px;margin-bottom:22px}
+.total .big{font-family:Archivo,sans-serif;font-variation-settings:"wdth" 110;font-weight:800;font-size:clamp(34px,6vw,48px);line-height:1}
+.total .of{color:var(--graphite)}
+.gauges{display:grid;gap:18px}
+.gauge-row{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:16px 18px}
+.gauge-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.gauge-head h3{font-size:20px;font-variation-settings:"wdth" 85;font-weight:700}
+.gauge-head .figs{color:var(--graphite);font-size:14.5px}
+.gauge-head .figs strong{color:var(--ink)}
+:root{--proj-bar:rgba(178,24,24,.55);--proj-row:rgba(178,24,24,.11);--act-bar:rgba(232,72,150,.5);--act-row:rgba(232,72,150,.12)}
+.gauge{position:relative;display:flex;height:22px;background:var(--track);border-radius:3px;overflow:hidden}
+.gauge .fill.act{background:var(--act-bar)}
+.gauge .fill.proj{background:var(--proj-bar)}
+tr.src-proj td{background:var(--proj-row)}
+tr.src-act td{background:var(--act-row)}
+.sw{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin-right:5px}
+.sw.proj{background:var(--proj-bar)}.sw.act{background:var(--act-bar)}
+.key{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:var(--graphite);margin:0 0 16px}
+.gauge::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:repeating-linear-gradient(90deg,transparent 0 calc(var(--tick) - 1px),color-mix(in srgb,var(--ink) 28%,transparent) calc(var(--tick) - 1px) var(--tick));
+  -webkit-mask:linear-gradient(to bottom,transparent 55%,#000 55%);mask:linear-gradient(to bottom,transparent 55%,#000 55%)}
+.gauge .fill{height:100%;background:var(--cardinal);transition:width .5s ease}
+.gauge.over .fill{background:repeating-linear-gradient(135deg,var(--bad) 0 8px,color-mix(in srgb,var(--bad) 70%,var(--surface)) 8px 16px)}
+.gauge .pend{position:absolute;top:0;height:100%;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--wait) 55%,transparent) 0 5px,transparent 5px 10px)}
+.scale{display:flex;justify-content:space-between;font-size:12px;color:var(--graphite);margin-top:4px}
+.legend{font-size:13.5px;color:var(--graphite);margin-top:14px}
+@media (prefers-reduced-motion:reduce){.gauge .fill{transition:none}}
+
+/* forms & cards */
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:20px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+@media (max-width:640px){.grid2{grid-template-columns:1fr}}
+.qn{font-family:Archivo,sans-serif;font-variation-settings:"wdth" 75;color:var(--cardinal);font-weight:700;margin-right:6px}
+.items{display:grid;gap:8px;margin:6px 0 8px}
+.item{display:grid;grid-template-columns:1fr 140px auto;gap:8px}
+@media (max-width:520px){.item{grid-template-columns:1fr 100px auto}}
+.itemsum{font-size:14px;color:var(--graphite)}
+.computed{border-top:1px dashed var(--rule);padding-top:16px;margin-top:8px}
+
+.plist{display:grid;gap:12px}
+details.prop{background:var(--surface);border:1px solid var(--rule);border-radius:8px}
+details.prop>summary{list-style:none;cursor:pointer;padding:14px 18px;display:grid;grid-template-columns:1fr auto;gap:4px 16px;align-items:center}
+details.prop>summary::-webkit-details-marker{display:none}
+details.prop>summary h3{font-size:19px;font-variation-settings:"wdth" 85}
+details.prop>summary .meta{color:var(--graphite);font-size:14px;grid-column:1}
+details.prop>summary .amt{grid-row:1/3;grid-column:2;text-align:right;font-weight:700;font-size:18px}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12.5px;font-weight:700;margin-left:8px;vertical-align:middle;font-family:"Public Sans",sans-serif}
+.pill.pending{background:var(--wait-soft);color:var(--wait)}
+.pill.approved{background:var(--ok-soft);color:var(--ok)}
+.pill.rejected{background:var(--cardinal-soft);color:var(--bad)}
+.pbody{padding:0 18px 18px;border-top:1px solid var(--rule)}
+.pbody dl{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:8px 16px;margin:16px 0}
+.pbody dt{color:var(--graphite);font-size:14.5px}
+.pbody dd{margin:0;white-space:pre-wrap}
+@media (max-width:560px){.pbody dl{grid-template-columns:1fr}.pbody dd{margin-bottom:6px}}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:13.5px;color:var(--graphite);font-weight:600}
+td.r,th.r{text-align:right}
+.empty{color:var(--graphite);padding:14px 0}
+.sgsec{margin-bottom:28px}
+.sgsec .gauge-row{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.sgsec .tbl{background:var(--surface);border:1px solid var(--rule);border-top:none;border-radius:0 0 8px 8px;padding:4px 10px 12px}
+.budrow{display:grid;grid-template-columns:1fr 160px auto;gap:10px;align-items:center;margin-bottom:10px}
+dialog{border:1px solid var(--rule);border-radius:10px;background:var(--surface);color:var(--ink);padding:22px;width:min(520px,calc(100vw - 32px))}
+dialog::backdrop{background:rgba(10,14,18,.45)}
+dialog h3{font-size:22px;margin-bottom:14px;font-variation-settings:"wdth" 90}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:6px;font-weight:600;z-index:20}
+.lockfin{max-width:460px}
+.budrow{grid-template-columns:1fr 160px auto}
+.budcard{border:1px solid var(--rule);border-radius:8px;padding:12px;margin-bottom:12px}
+.budcard .budrow{margin-bottom:8px}
+.budcard .kwlabel{font-size:13.5px;color:var(--graphite);display:block;margin-bottom:4px}
+.drop{display:grid;place-items:center;gap:4px;text-align:center;padding:36px 20px;border:2px dashed var(--rule);border-radius:10px;background:var(--surface);cursor:pointer}
+.drop strong{font-family:Archivo,sans-serif;font-variation-settings:"wdth" 90;font-size:22px}
+.drop span{color:var(--graphite);font-size:14.5px}
+.drop.over{border-color:var(--cardinal);background:var(--cardinal-soft)}
+.mapgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0 16px}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:15px;margin:4px 0 0}
+.check input{margin-top:4px}
+.csvsum{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:18px 0}
+.csvsum div{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:10px 12px}
+.csvsum b{display:block;font-size:18px}
+.csvsum span{color:var(--graphite);font-size:13.5px}
+.tag{font-size:13px;font-weight:600}
+.tag.hit{color:var(--ok)}.tag.multi{color:var(--wait)}.tag.miss{color:var(--graphite)}.tag.dup{color:var(--graphite);font-style:italic}
+td select{min-width:150px;padding:6px 8px}
+.foot{color:var(--graphite);font-size:13.5px;margin-top:40px}
+</style>
+</head>
+<body>
+
+<div id="lock">
+  <form class="lockbox" id="lockForm" autocomplete="off">
+    <h1 class="mark">MEGM</h1>
+    <p class="sub">Stanford Mechanical Engineering Women &amp; Gender Minorities</p>
+    <div class="field">
+      <label for="pw">Club password</label>
+      <input type="password" id="pw" required autocomplete="current-password">
+    </div>
+    <button class="btn primary" id="lockBtn" type="submit">Unlock</button>
+    <p class="err" id="lockErr" role="alert"></p>
+  </form>
+</div>
+
+<div id="app" hidden>
+  <header class="top">
+    <div class="wrap topin">
+      <div class="brand"><b>MEGM</b><span>Budget &amp; event proposals</span></div>
+      <button class="btn small" id="lockAll" type="button">Lock site</button>
+    </div>
+    <div class="wrap">
+      <nav class="tabs" aria-label="Sections">
+        <button data-tab="overview" aria-current="true">Budget overview</button>
+        <button data-tab="submit">Submit a proposal</button>
+        <button data-tab="finance">Finance &amp; presidents</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <p class="msg warn" id="dbWarn" hidden></p>
+
+    <section class="view" id="v-overview">
+      <h2>2026–27 annual budget</h2>
+      <p class="lede">How much each subgroup has been given and how much has been spent on approved events so far. Updated whenever the finance chairs approve a proposal or record a purchase.</p>
+      <div id="overviewBody"><p class="empty">Loading budget…</p></div>
+    </section>
+
+    <section class="view" id="v-submit" hidden>
+      <h2>Submit an event proposal</h2>
+      <p class="lede">Proposals go only to the finance chairs and presidents, who approve or reject them. Questions 6 and 7 fill in automatically from the current budget.</p>
+      <form class="card" id="propForm" autocomplete="off">
+        <div class="grid2">
+          <div class="field"><label for="f-name">Your name</label><input type="text" id="f-name" required></div>
+          <div class="field"><label for="f-contact">Email or phone</label><input type="text" id="f-contact"></div>
+        </div>
+        <div class="field"><label for="f-sub">Subgroup</label><select id="f-sub" required></select></div>
+        <div class="field"><label for="f-event"><span class="qn">1</span>Event name</label><input type="text" id="f-event" required></div>
+        <div class="field"><label for="f-purpose"><span class="qn">2</span>Purpose of the event</label><textarea id="f-purpose" required></textarea></div>
+        <div class="grid2">
+          <div class="field"><label for="f-cap"><span class="qn">3</span>Attendance cap</label><input type="number" id="f-cap" min="0" step="1" inputmode="numeric"><span class="hint">For events where cost depends on headcount, like meals or drinks. Leave blank if it doesn’t apply.</span></div>
+          <div class="field"><label for="f-total"><span class="qn">4</span>Proposed total budget ($)</label><input type="number" id="f-total" min="0" step="0.01" inputmode="decimal" required></div>
+        </div>
+        <div class="field">
+          <label><span class="qn">5</span>Items and services being purchased</label>
+          <div class="items" id="items"></div>
+          <div class="actions" style="margin-top:0"><button class="btn small" type="button" id="addItem">Add item</button><span class="itemsum num" id="itemSum"></span></div>
+        </div>
+        <div class="computed grid2">
+          <div class="field"><label for="f-q6"><span class="qn">6</span>Total annual budget given to subgroup ($)</label><input type="number" id="f-q6" step="0.01"><span class="hint" id="q6hint"></span></div>
+          <div class="field"><label for="f-q7"><span class="qn">7</span>Annual budget already used, including this event ($)</label><input type="number" id="f-q7" step="0.01"><span class="hint" id="q7hint"></span></div>
+        </div>
+        <div class="actions"><button class="btn primary" type="submit" id="propBtn">Submit proposal</button></div>
+        <p class="err" id="propErr" role="alert"></p>
+        <p class="msg" id="propOk" hidden></p>
+      </form>
+    </section>
+
+    <section class="view" id="v-finance" hidden>
+      <div id="finLock">
+        <h2>Finance chairs &amp; presidents</h2>
+        <p class="lede">Proposal review, purchase records, and budget allocations. Enter the finance password to continue.</p>
+        <form class="card lockfin" id="finForm" autocomplete="off">
+          <div class="field"><label for="fpw">Finance password</label><input type="password" id="fpw" required></div>
+          <button class="btn primary" id="finBtn" type="submit">Unlock finance tools</button>
+          <p class="err" id="finErr" role="alert"></p>
+        </form>
+      </div>
+      <div id="finApp" hidden>
+        <div class="subtabs" role="tablist">
+          <button data-ftab="proposals" aria-current="true">Proposals</button>
+          <button data-ftab="purchases">Purchases</button>
+          <button data-ftab="budgets">Budget allocations</button>
+          <button data-ftab="import">Import CSV</button>
+        </div>
+        <div id="f-proposals">
+          <div class="subtabs" id="pfilter">
+            <button data-pf="pending" aria-current="true">Pending</button>
+            <button data-pf="approved">Approved</button>
+            <button data-pf="rejected">Rejected</button>
+          </div>
+          <div class="plist" id="plist"><p class="empty">Loading proposals…</p></div>
+        </div>
+        <div id="f-purchases" hidden>
+          <div class="actions" style="margin:0 0 18px"><button class="btn primary" type="button" id="addPurchase">Add purchase</button></div>
+          <p class="lede" style="color:var(--graphite);margin:-6px 0 18px;max-width:62ch">Approving a proposal adds its line items here. Edit any row when the real cost differs from the proposal, or add purchases made outside a proposal.</p>
+          <div id="purchBody"></div>
+        </div>
+        <div id="f-budgets" hidden>
+          <form class="card" id="budForm">
+            <div id="budRows"></div>
+            <div class="actions"><button class="btn small" type="button" id="addSg">Add subgroup</button><span class="num" id="budTotal" style="margin-left:auto;font-weight:700"></span></div>
+            <div class="actions"><button class="btn primary" type="submit">Save allocations</button></div>
+            <p class="err" id="budErr" role="alert"></p>
+          </form>
+          <div class="card" style="margin-top:20px">
+            <h3 style="font-size:20px;margin-bottom:6px;font-variation-settings:'wdth' 85">Backup</h3>
+            <p style="color:var(--graphite);margin:0 0 12px;max-width:62ch">Download an encrypted copy of the budgets and purchases, or restore one. Restoring replaces everything currently recorded.</p>
+            <div class="actions" style="margin-top:0">
+              <button class="btn" type="button" id="bkDown">Download backup</button>
+              <label class="btn" for="bkFile">Restore from backup</label><input type="file" id="bkFile" accept=".json,application/json" hidden>
+            </div>
+            <p class="err" id="bkErr" role="alert"></p>
+          </div>
+        </div>
+        <div id="f-import" hidden>
+          <p class="lede" style="color:var(--graphite);margin:0 0 18px;max-width:62ch">Drop in a bank, card or reimbursement export. Each row is matched to a subgroup using the keywords set under Budget allocations. Review the matches, fix any that are wrong, then import them as purchases.</p>
+          <label class="drop" id="drop" for="csvFile"><strong>Drop an account statement here</strong><span>The VSO account statement export (.xls) or a CSV. Click to choose a file.</span><input type="file" id="csvFile" accept=".xls,.csv,.htm,.html,text/csv" hidden></label>
+          <p class="err" id="csvErr" role="alert"></p>
+          <div id="csvArea"></div>
+        </div>
+      </div>
+    </section>
+    <p class="foot">Proposals and purchase records are encrypted in your browser before they’re saved. Only someone with the finance password can read them.</p>
+  </main>
+</div>
+
+<dialog id="pDlg">
+  <form id="pDlgForm" method="dialog">
+    <h3 id="pDlgTitle">Add purchase</h3>
+    <div class="field"><label for="d-sub">Subgroup</label><select id="d-sub" required></select></div>
+    <div class="field"><label for="d-desc">Description</label><input type="text" id="d-desc" required></div>
+    <div class="grid2">
+      <div class="field"><label for="d-date">Date</label><input type="date" id="d-date"></div>
+      <div class="field"><label for="d-amt">Amount ($)</label><input type="number" id="d-amt" step="0.01" required></div>
+    </div>
+    <div class="field"><label for="d-note">Note</label><input type="text" id="d-note"></div>
+    <div class="actions">
+      <button class="btn primary" type="submit" value="save">Save purchase</button>
+      <button class="btn" type="button" id="d-cancel">Cancel</button>
+      <button class="btn danger" type="button" id="d-del" style="margin-left:auto">Delete purchase</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script>
+const CFG = {"iter": 250000, "memberSalt": "78uobRUFPVoKwbVLbdZIkg==", "finSalt": "5rtoI0X+p4nlpiCohPE7EA==", "memberCheck": {"iv": "+fjrFnyAF/fx2Itt", "ct": "aDWVPdPzfB4brk/fuTY5VkWQbw0+Vqg="}, "pub": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3pgsGaQC+Cc+W8dAu4P3eXfknv2sLucrBwzIN6N8zctnO79ceO4HLdiQeA/rGWvvoCXQuwgjNFxWnMMqe7rDAZL5fYnSxzhjoZ9NIj/z6VLwCjgPdqXgp4rZOW4FwByUjCdmk8TEb0IbDbHlrOj1dH2m4km2dKektp6CC5xaetNnVkLjGaEP00t0GFY7qz7ptBbTU8pSdQ/1g4dVEZ8IoUGAnL4Ej56lAG1zUuTmwDZuYmNJ5y3sPnv5Eskk40O+hK71txYmUBJltbYJD6pA8xOArtYcG/zhlIDPdJDiLeTVJWg3YFpZfE5SwkvmbSRxXx/LAQ2PTraCHNJOlF9bdQIDAQAB", "privWrapped": {"iv": "8Ljg/Tj5zLUbX29z", "ct": "WkhIAO7Hn7KUHYOnw7yqYlE2512sckVpuUnmkjNmy7SP/i/lxXTxLGd9cdbCSiB31S6rVZeMr5/7qo+j2qSNH2B5AWcQyxJoeP3YCgaUtqg23qjaPaez6ycfKovBJUYm3WsRxndR20ZYOgapaGvoCfrczMFHjUR1Rq/ZLkMrWAnytxgpc0mD5KyHnB0AeMQIhTO94IJMJTAyWDuRQ+rub4Ichtk+cBfSEsi2T35Bj47EUo+8JerJM1e64YwUVOHobxm1z8Qjpm+PByYkT1LMXGvN3P4IAXzdXdSAU+JrQr0KREdUQ+eqYEYapypnXhHcbO+Ak4p+nSil/UPxljRht1AtpJrmmj0S7iVdG2SK+F9lCZvqc8QwGj9bQNR8SdDtYi5OmivHauK9VkbXLeCKJaWw2t3R6KX+49Ehf8SP1LOO56rLmfHefkk6LSHU/hDQbpNQLVoHLLTyoWVZyvXpKP26K+2S5Cz+QbOKmLw2wi0f78vvFyqm+9C6tntU32yHuQAolsSlTAuNDhRvMv3FH9KF7SEjf87y9CxqFMh1/g2ZDfKzIe1FcJMDwJg+WkRPRAquLBbwsKtOIHOUulDLQ8sxgD9LgKwWNYmtIx38gb3avSv432VProzSl9AvRmq1kJAaJcslqlMMWcAhqHq8R3fW8Wdjx/A1Y8cGXFRZyruclnryAF2k3qiMoABSyauOFpZReWRf7vgOg5jPuOqeBezJNUzD8xFBEjQ0v4ui08nqJulN3jfuEav2WU/WhzhjBITCo8Q1dsVFx4CvEbUsJdXzi/lEHLgqk/Y+o7OsGhMA+SL2g9yafulZP4ERg7tVHZw056FOisAoI/pcefOh9z7Rcp7lECeLbdVRcB3ZoXv2uJShbC9jM3uYs8/W1vzJl3y6gmEoXnUEeKJONVGgnxAxltRsY+eP+ARe2jOuwpBDO5EemVCz5mItaULxFG8nGE34WaiGkb3zJv3kBEqYch95/jzIeMjs5KhAPrmD7IvUG8mHAsia42Rexocg3biQCOGrOL5y03alC950C9Ga1Puqqwd6Qvl0OhR4Au+wy6cOfoe1UIjUDhWtuVanVxebUT1ns6SrLLlbN8oeRDUE+R7Tl2FwCVZr8j3j40/HoZaK7FR2ECBgkxPGLDggqwIg/UbnSzdTlXKZAqPnf6PzEDcVFmafS6jYaw2zFlSFBm3jpSCiQqGnxS7SbwdQXv/Ra3AOt2jm1ubXDiWLR2rb20DgnqIDwX6WSACMW6vtVKlBTO7barPkXEQW9x4m71vHEaISd2OoohAnBiGsKRnrhABMYapeX30Fh+0aCZ5SQUEZjvphMdG0DuOXl2TSEB/qxh/2flBKmeDkUEiH6zwUpBixbHrGYvwJRVRVgcPUkh+Zcw3dEPzZ6Mfp69tHmuMohsn/xkIASN3GOXxLN7y/CBaQKBWeZsx3vrx0Xt0kdYt3q9P+9enf7KiKakuI3kmWpy4NoMXYqxL3XgSiuBRpbHgOGBFfBrzFqjuBdqBwm/kd0hSjWfRWaSV4wWoxtrqLzN7o0lV7Z+dvZIa1yZD6/MJe2iOZ1AtKpmxdZBJcNh1OO262xt4MHHk3xudFRwOO/0qsn9Rn7oe6lpyxaEKKA1lenlZxtrPY5PKQVT+C7vg="}};
+const DEFAULT_SUBGROUPS = [
+  {id:"coffee", name:"Coffee Chats", budget:5000},
+  {id:"fall", name:"Fall Reception", budget:6000},
+  {id:"seminar", name:"Women’s Seminar", budget:6000},
+  {id:"social", name:"Social", budget:4000},
+  {id:"outreach", name:"Outreach", budget:1000}
+];
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"});
+const money = n => fmt.format(Number(n)||0);
+const round2 = n => Math.round((Number(n)||0)*100)/100;
+const uid = p => p + "_" + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+const today = () => new Date().toISOString().slice(0,10);
+const clone = o => JSON.parse(JSON.stringify(o));
+function armed(btn,label){
+  if(btn.dataset.armed){ delete btn.dataset.armed; clearTimeout(btn._t); if(btn.dataset.orig) btn.textContent=btn.dataset.orig; return true; }
+  btn.dataset.orig=btn.textContent; btn.dataset.armed="1"; btn.textContent=label;
+  btn._t=setTimeout(()=>{ delete btn.dataset.armed; btn.textContent=btn.dataset.orig; },5000);
+  return false;
+}
+function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
+
+/* ---------- crypto ---------- */
+const te=new TextEncoder(), td=new TextDecoder();
+const u8=b=>Uint8Array.from(atob(b),c=>c.charCodeAt(0));
+const b64=buf=>{const a=new Uint8Array(buf);let s="";for(let i=0;i<a.length;i+=0x8000)s+=String.fromCharCode.apply(null,a.subarray(i,i+0x8000));return btoa(s)};
+async function derive(pw,salt){
+  const base=await crypto.subtle.importKey("raw",te.encode(pw),"PBKDF2",false,["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt:u8(salt),iterations:CFG.iter,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
+}
+async function aesEnc(key,obj){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,te.encode(JSON.stringify(obj)));return {iv:b64(iv),ct:b64(ct)}}
+async function aesRaw(key,blob){return new Uint8Array(await crypto.subtle.decrypt({name:"AES-GCM",iv:u8(blob.iv)},key,u8(blob.ct)))}
+async function aesDec(key,blob){return JSON.parse(td.decode(await aesRaw(key,blob)))}
+async function sealProposal(obj){
+  const pub=await crypto.subtle.importKey("spki",u8(CFG.pub),{name:"RSA-OAEP",hash:"SHA-256"},false,["encrypt"]);
+  const k=await crypto.subtle.generateKey({name:"AES-GCM",length:256},true,["encrypt","decrypt"]);
+  const raw=await crypto.subtle.exportKey("raw",k);
+  const wk=b64(await crypto.subtle.encrypt({name:"RSA-OAEP"},pub,raw));
+  return {wk, ...(await aesEnc(k,obj))};
+}
+async function openProposal(body){
+  const raw=await crypto.subtle.decrypt({name:"RSA-OAEP"},S.priv,u8(body.wk));
+  const k=await crypto.subtle.importKey("raw",raw,"AES-GCM",false,["decrypt"]);
+  return aesDec(k,body);
+}
+
+/* ---------- state ---------- */
+const S = { mkey:null, fkey:null, priv:null, db:null, summary:null, ledger:null, ledgerLoaded:false,
+  props:new Map(), propOpen:new Set(), pf:"pending", unsub:[], writeChain:Promise.resolve() };
+
+/* ---------- Firebase (paste your project's config here; see README) ---------- */
+const FIREBASE_CONFIG = {
+  apiKey: "PASTE_API_KEY",
+  authDomain: "PASTE_PROJECT.firebaseapp.com",
+  projectId: "PASTE_PROJECT",
+  appId: "PASTE_APP_ID"
+};
+const FINANCE_EMAIL = "megm-finance@megm-budget.app";
+const FB = "https://www.gstatic.com/firebasejs/10.12.2/";
+let dbPromise = null, FBX = null;
+const fbErr = e => ({ code: e?.code==="permission-denied" ? "invalid_argument" : (e?.code||"unavailable"), message: e?.message||"" });
+function getDb(){
+  if(!dbPromise) dbPromise = (async()=>{
+    if(!FIREBASE_CONFIG.apiKey || FIREBASE_CONFIG.apiKey.startsWith("PASTE")) return null;
+    const [app,fs,au] = await Promise.all([import(FB+"firebase-app.js"), import(FB+"firebase-firestore.js"), import(FB+"firebase-auth.js")]);
+    const a = app.initializeApp(FIREBASE_CONFIG);
+    const db = fs.getFirestore(a), auth = au.getAuth(a);
+    await au.setPersistence(auth, au.inMemoryPersistence);
+    FBX = { fs, au, auth };
+    const wrap = s => ({ id:s.id, exists:s.exists(), data:()=>s.data(), metadata:{ fromCache:s.metadata.fromCache } });
+    return {
+      doc: p => ({
+        onSnapshot: (next,err) => fs.onSnapshot(fs.doc(db,p), s=>next(wrap(s)), e=>err&&err(fbErr(e))),
+        set: d => fs.setDoc(fs.doc(db,p), d).catch(e=>{ throw fbErr(e); }),
+        delete: () => fs.deleteDoc(fs.doc(db,p)).catch(e=>{ throw fbErr(e); })
+      }),
+      collection: p => ({
+        onSnapshot: (next,err) => fs.onSnapshot(fs.collection(db,p), s=>next({ docs:s.docs.map(wrap), metadata:{ fromCache:s.metadata.fromCache } }), e=>err&&err(fbErr(e)))
+      })
+    };
+  })().catch(e=>{ console.error(e); return null; });
+  return dbPromise;
+}
+getDb();
+
+function dbWarn(t){const w=$("#dbWarn");w.textContent=t;w.hidden=!t}
+
+/* ---------- lock ---------- */
+$("#lockForm").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const btn=$("#lockBtn"); btn.disabled=true; $("#lockErr").textContent="";
+  try{
+    const k=await derive($("#pw").value, CFG.memberSalt);
+    const ok=td.decode(await aesRaw(k,CFG.memberCheck));
+    if(ok!=="megm-ok") throw 0;
+    S.mkey=k; $("#pw").value="";
+    $("#lock").hidden=true; $("#app").hidden=false;
+    startMember();
+  }catch{ $("#lockErr").textContent="That password isn’t right. Check with a club officer for the current one."; }
+  btn.disabled=false;
+});
+$("#lockAll").addEventListener("click",async()=>{ try{ if(FBX) await FBX.au.signOut(FBX.auth); }catch{} location.reload(); });
+
+/* ---------- tabs ---------- */
+$$("nav.tabs button").forEach(b=>b.addEventListener("click",()=>{
+  $$("nav.tabs button").forEach(x=>x.setAttribute("aria-current",x===b));
+  ["overview","submit","finance"].forEach(t=>$("#v-"+t).hidden = t!==b.dataset.tab);
+}));
+$$("[data-ftab]").forEach(b=>b.addEventListener("click",()=>{
+  $$("[data-ftab]").forEach(x=>x.setAttribute("aria-current",x===b));
+  ["proposals","purchases","budgets","import"].forEach(t=>$("#f-"+t).hidden = t!==b.dataset.ftab);
+}));
+$$("[data-pf]").forEach(b=>b.addEventListener("click",()=>{
+  $$("[data-pf]").forEach(x=>x.setAttribute("aria-current",x===b)); S.pf=b.dataset.pf; renderProposals();
+}));
+
+/* ---------- member side ---------- */
+async function startMember(){
+  addItemRow(); addItemRow();
+  const db=await getDb(); S.db=db;
+  if(!db){ dbWarn("The site can’t reach its database. Check your connection and reload. If this keeps happening, the Firebase settings in index.html need to be filled in (see README)."); renderOverview(); return; }
+  S.unsub.push(db.doc("club/summary").onSnapshot(async snap=>{
+    if(!snap.exists){ S.summary=null; renderOverview(); fillSubgroupSelect(); return; }
+    try{ S.summary=await aesDec(S.mkey, snap.data()); }catch{ S.summary=null; }
+    renderOverview(); fillSubgroupSelect(); computeQs();
+  }, e=>dbWarn("Live updates stopped ("+e.code+"). Reload the page to reconnect.")));
+}
+
+function subgroupsForView(){ return S.summary?.subgroups || null; }
+
+function fillHTML(split,used,budget,pct){
+  if(!split||!budget) return `<div class="fill" style="width:${pct}%"></div>`;
+  let a=(+split.act||0)/budget*100, p=(+split.proj||0)/budget*100; const t=a+p;
+  if(t>100){a=a/t*100;p=p/t*100;}
+  return `<div class="fill act" style="width:${a}%" title="Actual costs: ${money(split.act)}"></div><div class="fill proj" style="width:${p}%" title="From approved proposals: ${money(split.proj)}"></div>`;
+}
+const KEY_HTML=`<div class="key"><span><span class="sw proj"></span>From approved proposals (estimated)</span><span><span class="sw act"></span>Actual costs (added or imported)</span></div>`;
+function gaugeHTML(sg, used, pending, split){
+  const budget=Number(sg.budget)||0, pct=budget?Math.min(100,used/budget*100):(used>0?100:0);
+  const tick = budget>0 ? Math.max(0.6, 500/budget*100) : 100;
+  const pendPct = budget? Math.max(0,Math.min(100-pct, (pending||0)/budget*100)) : 0;
+  const rem=budget-used;
+  return `<div class="gauge-row">
+    <div class="gauge-head"><h3>${esc(sg.name)}</h3>
+      <div class="figs num"><strong>${money(used)}</strong> used of ${money(budget)} · ${rem>=0?`<strong>${money(rem)}</strong> left`:`<strong style="color:var(--bad)">${money(-rem)} over</strong>`}</div></div>
+    <div class="gauge ${used>budget?"over":""}" style="--tick:${tick}%" role="img" aria-label="${esc(sg.name)}: ${Math.round(pct)}% of budget used">
+      ${fillHTML(split,used,budget,pct)}${pendPct?`<div class="pend" style="left:${pct}%;width:${pendPct}%"></div>`:""}
+    </div>
+    <div class="scale num"><span>$0</span><span>${money(budget)}</span></div>
+  </div>`;
+}
+
+function renderOverview(){
+  const el=$("#overviewBody"); const sgs=subgroupsForView();
+  if(!sgs){ el.innerHTML=`<p class="empty">The budget hasn’t been set up yet. It appears here the first time a finance chair or president unlocks the finance tools.</p>`; return; }
+  const tb=sgs.reduce((a,s)=>a+(+s.budget||0),0), tu=sgs.reduce((a,s)=>a+(+s.used||0),0);
+  el.innerHTML = `<div class="total num"><span class="big">${money(tb-tu)}</span><span class="of">remaining of ${money(tb)} total · ${money(tu)} spent</span></div>
+    ${sgs.some(s=>s.proj!=null)?KEY_HTML:""}<div class="gauges">${sgs.map(s=>gaugeHTML(s,+s.used||0,0,s.proj!=null?{proj:+s.proj,act:+s.act}:null)).join("")}</div>
+    <p class="legend">Each tick on a bar marks $500.</p>`;
+}
+
+function fillSubgroupSelect(){
+  const sel=$("#f-sub"), cur=sel.value, sgs=subgroupsForView()||DEFAULT_SUBGROUPS;
+  sel.innerHTML=`<option value="">Choose a subgroup</option>`+sgs.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join("");
+  if(cur) sel.value=cur;
+}
+
+function addItemRow(desc="",cost=""){
+  const row=document.createElement("div"); row.className="item";
+  row.innerHTML=`<input type="text" placeholder="Item or service, e.g. catering for 40" aria-label="Item description" value="${esc(desc)}">
+    <input type="number" min="0" step="0.01" placeholder="Cost $" aria-label="Item cost" value="${esc(cost)}">
+    <button type="button" class="btn small" aria-label="Remove item">Remove</button>`;
+  row.querySelector("button").onclick=()=>{row.remove();sumItems()};
+  row.querySelectorAll("input").forEach(i=>i.addEventListener("input",sumItems));
+  $("#items").appendChild(row); sumItems();
+}
+$("#addItem").onclick=()=>addItemRow();
+function readItems(){return $$("#items .item").map(r=>{const [d,c]=r.querySelectorAll("input");return {desc:d.value.trim(),cost:round2(c.value)}}).filter(i=>i.desc||i.cost)}
+function sumItems(){
+  const s=readItems().reduce((a,i)=>a+i.cost,0), t=Number($("#f-total").value)||0;
+  $("#itemSum").textContent = s? `Items add up to ${money(s)}${t&&Math.abs(s-t)>0.004?` (proposed total is ${money(t)})`:""}` : "";
+}
+$("#f-total").addEventListener("input",()=>{sumItems();computeQs()});
+$("#f-sub").addEventListener("change",computeQs);
+
+function computeQs(){
+  const sgs=subgroupsForView(), sg=sgs?.find(s=>s.id===$("#f-sub").value);
+  const q6=$("#f-q6"), q7=$("#f-q7");
+  if(sg){
+    const t=Number($("#f-total").value)||0;
+    q6.value=round2(sg.budget); q7.value=round2((+sg.used||0)+t);
+    q6.readOnly=q7.readOnly=true;
+    $("#q6hint").textContent="From the current budget.";
+    $("#q7hint").textContent=`${money(sg.used||0)} already spent plus this proposal.`;
+  }else{
+    q6.readOnly=q7.readOnly=!!sgs;
+    if(sgs){q6.value="";q7.value="";}
+    $("#q6hint").textContent=sgs?"Choose a subgroup to fill this in.":"Budget isn’t loaded; enter it if you know it.";
+    $("#q7hint").textContent="";
+  }
+}
+
+$("#propForm").addEventListener("submit", async e=>{
+  e.preventDefault(); $("#propErr").textContent=""; $("#propOk").hidden=true;
+  if(!S.db){ $("#propErr").textContent="The site can’t reach its database, so proposals can’t be saved right now. Reload and try again."; return; }
+  const sel=$("#f-sub"); const sgName=sel.options[sel.selectedIndex]?.text||"";
+  const p={ submittedBy:$("#f-name").value.trim(), contact:$("#f-contact").value.trim(), subgroupId:sel.value, subgroupName:sgName,
+    eventName:$("#f-event").value.trim(), purpose:$("#f-purpose").value.trim(),
+    attendanceCap: $("#f-cap").value===""?null:Number($("#f-cap").value), proposedTotal:round2($("#f-total").value),
+    items:readItems(), q6: $("#f-q6").value===""?null:round2($("#f-q6").value), q7: $("#f-q7").value===""?null:round2($("#f-q7").value),
+    submittedAt:Date.now() };
+  const btn=$("#propBtn"); btn.disabled=true;
+  try{
+    const body=await sealProposal(p);
+    const id=uid("p");
+    await S.db.doc("proposals/"+id).set({created:p.submittedAt, ...body});
+    $("#propForm").reset(); $("#items").innerHTML=""; addItemRow(); addItemRow(); computeQs();
+    const ok=$("#propOk"); ok.textContent=`Proposal “${p.eventName}” sent to the finance chairs and presidents.`; ok.hidden=false;
+  }catch(err){
+    $("#propErr").textContent = err?.code==="invalid_argument" ? "The database refused this proposal. Ask a finance chair to check the Firestore rules (see README)." : "The proposal wasn’t saved. Check your connection and submit again.";
+  }
+  btn.disabled=false;
+});
+
+/* ---------- finance unlock ---------- */
+$("#finForm").addEventListener("submit", async e=>{
+  e.preventDefault(); const btn=$("#finBtn"); btn.disabled=true; $("#finErr").textContent="";
+  try{
+    const pw=$("#fpw").value;
+    const k=await derive(pw, CFG.finSalt);
+    const pk=await aesRaw(k, CFG.privWrapped);
+    const priv=await crypto.subtle.importKey("pkcs8",pk,{name:"RSA-OAEP",hash:"SHA-256"},false,["decrypt"]);
+    await getDb();
+    if(FBX){
+      try{ await FBX.au.signInWithEmailAndPassword(FBX.auth, FINANCE_EMAIL, pw); }
+      catch(err){ $("#finErr").textContent="The password is right, but the finance account couldn’t sign in to the database. Check that the Firebase user in the README was created with this password."; btn.disabled=false; return; }
+    }
+    S.priv=priv; S.fkey=k; $("#fpw").value="";
+    $("#finLock").hidden=true; $("#finApp").hidden=false;
+    startFinance();
+  }catch{ $("#finErr").textContent="That finance password isn’t right."; }
+  btn.disabled=false;
+});
+
+function startFinance(){
+  const db=S.db;
+  if(!db){ $("#plist").innerHTML=`<p class="empty">The site can’t reach its database. Reload and try again.</p>`; return; }
+  S.unsub.push(db.doc("finance/ledger").onSnapshot(async snap=>{
+    if(!snap.exists){
+      if(snap.metadata.fromCache || S.ledgerLoaded) return;
+      S.ledgerLoaded=true;
+      await saveLedger({subgroups:clone(DEFAULT_SUBGROUPS), purchases:[], decisions:{}});
+      return;
+    }
+    try{ S.ledger=await aesDec(S.fkey, snap.data()); S.ledgerLoaded=true; }catch{ toast("Couldn’t read the ledger."); return; }
+    renderFinance();
+  }, e=>toast("Ledger updates stopped ("+e.code+"). Reload to reconnect.")));
+  S.unsub.push(db.collection("proposals").onSnapshot(async snap=>{
+    const seen=new Set();
+    for(const d of snap.docs){
+      seen.add(d.id);
+      if(!S.props.has(d.id)){
+        try{ S.props.set(d.id,{id:d.id, ...(await openProposal(d.data()))}); }
+        catch{ S.props.set(d.id,{id:d.id, broken:true, eventName:"Unreadable proposal", submittedAt:d.data().created}); }
+      }
+    }
+    for(const id of [...S.props.keys()]) if(!seen.has(id)) S.props.delete(id);
+    renderFinance();
+  }, e=>toast("Proposal updates stopped ("+e.code+"). Reload to reconnect.")));
+}
+
+function splitBy(L,id){ const o={proj:0,act:0}; for(const p of L.purchases) if(p.subgroupId===id) o[p.proposalId?"proj":"act"]+=(+p.amount||0); return o; }
+function usedBy(L){ const m={}; for(const p of L.purchases) m[p.subgroupId]=(m[p.subgroupId]||0)+(+p.amount||0); return m; }
+
+async function saveLedger(L){
+  L.updatedAt=Date.now();
+  S.ledger=L; renderFinance();
+  const job=S.writeChain.then(async()=>{
+    await S.db.doc("finance/ledger").set({...(await aesEnc(S.fkey,L)), updatedAt:L.updatedAt});
+    const u=usedBy(L);
+    const summary={subgroups:L.subgroups.map(s=>({id:s.id,name:s.name,budget:+s.budget||0,used:round2(u[s.id]||0),proj:round2(splitBy(L,s.id).proj),act:round2(splitBy(L,s.id).act)})), updatedAt:L.updatedAt};
+    await S.db.doc("club/summary").set({...(await aesEnc(S.mkey,summary)), updatedAt:L.updatedAt});
+  });
+  S.writeChain=job.catch(()=>{});
+  try{ await job; }catch(err){ toast(err?.code==="invalid_argument"?"Your access level can’t save changes.":"Change not saved. Try again."); throw err; }
+}
+
+function statusOf(id){ return S.ledger?.decisions?.[id]?.status || "pending"; }
+function sgName(id){ return S.ledger?.subgroups.find(s=>s.id===id)?.name || "Unassigned"; }
+
+function renderFinance(){ if(!S.fkey) return; renderProposals(); renderPurchases(); renderBudgets(); if(CSV) renderCSV(); }
+
+/* ---------- proposals ---------- */
+function renderProposals(){
+  const el=$("#plist"); if(!S.ledger){ el.innerHTML=`<p class="empty">Loading…</p>`; return; }
+  const counts={pending:0,approved:0,rejected:0};
+  const all=[...S.props.values()].sort((a,b)=>(b.submittedAt||0)-(a.submittedAt||0));
+  all.forEach(p=>counts[statusOf(p.id)]++);
+  $$("[data-pf]").forEach(b=>b.textContent=b.dataset.pf[0].toUpperCase()+b.dataset.pf.slice(1)+` (${counts[b.dataset.pf]})`);
+  const list=all.filter(p=>statusOf(p.id)===S.pf);
+  if(!list.length){ el.innerHTML=`<p class="empty">No ${S.pf} proposals.</p>`; return; }
+  const used=usedBy(S.ledger);
+  el.innerHTML=list.map(p=>{
+    const st=statusOf(p.id), dec=S.ledger.decisions[p.id];
+    const sg=S.ledger.subgroups.find(s=>s.id===p.subgroupId);
+    const after = sg ? (+sg.budget) - (used[sg.id]||0) - (st==="pending"? (+p.proposedTotal||0):0) : null;
+    const items=(p.items||[]);
+    return `<details class="prop" data-id="${esc(p.id)}" ${S.propOpen.has(p.id)?"open":""}>
+      <summary><h3>${esc(p.eventName)}<span class="pill ${st}">${st[0].toUpperCase()+st.slice(1)}</span></h3>
+        <span class="meta">${esc(p.subgroupName||sgName(p.subgroupId))} · from ${esc(p.submittedBy||"unknown")} · ${p.submittedAt?new Date(p.submittedAt).toLocaleDateString():""}</span>
+        <span class="amt num">${money(p.proposedTotal)}</span></summary>
+      <div class="pbody">
+      ${p.broken?`<p class="empty">This proposal couldn’t be decrypted.</p>`:`
+        <dl>
+          <dt>Submitted by</dt><dd>${esc(p.submittedBy)}${p.contact?` (${esc(p.contact)})`:""}</dd>
+          <dt>1. Event name</dt><dd>${esc(p.eventName)}</dd>
+          <dt>2. Purpose</dt><dd>${esc(p.purpose)}</dd>
+          <dt>3. Attendance cap</dt><dd>${p.attendanceCap==null?"Not applicable":esc(p.attendanceCap)}</dd>
+          <dt>4. Proposed total</dt><dd class="num">${money(p.proposedTotal)}</dd>
+          <dt>5. Items &amp; costs</dt><dd>${items.length?`<div class="tablewrap"><table><tbody>${items.map(i=>`<tr><td>${esc(i.desc)}</td><td class="r num">${money(i.cost)}</td></tr>`).join("")}</tbody></table></div>`:"None listed"}</dd>
+          <dt>6. Subgroup annual budget</dt><dd class="num">${p.q6==null?"—":money(p.q6)}</dd>
+          <dt>7. Used incl. this event</dt><dd class="num">${p.q7==null?"—":money(p.q7)} <span style="color:var(--graphite)">(at time of submission)</span></dd>
+          ${sg&&st==="pending"?`<dt>If approved now</dt><dd class="num" style="color:${after<0?"var(--bad)":"var(--ok)"}">${after<0?money(-after)+" over":money(after)+" left"} in ${esc(sg.name)}</dd>`:""}
+          ${dec?.note?`<dt>Decision note</dt><dd>${esc(dec.note)}</dd>`:""}
+        </dl>`}
+        ${st==="pending"&&!p.broken?`
+          <div class="field"><label for="note-${esc(p.id)}">Note to record with the decision (optional)</label><input type="text" id="note-${esc(p.id)}"></div>
+          <div class="actions"><button class="btn ok" data-act="approve">Approve and add to purchases</button><button class="btn danger" data-act="reject">Reject</button><button class="btn link" data-act="delete" style="margin-left:auto">Delete proposal</button></div>`
+        :`<div class="actions"><button class="btn" data-act="undo">Move back to pending</button><button class="btn link" data-act="delete" style="margin-left:auto">Delete proposal</button></div>`}
+      </div></details>`;
+  }).join("");
+}
+$("#plist").addEventListener("toggle",e=>{const d=e.target.closest?.("details.prop");if(!d)return;d.open?S.propOpen.add(d.dataset.id):S.propOpen.delete(d.dataset.id)},true);
+$("#plist").addEventListener("click", async e=>{
+  const b=e.target.closest("button[data-act]"); if(!b) return;
+  const id=b.closest("details").dataset.id, p=S.props.get(id), act=b.dataset.act;
+  const note=document.getElementById("note-"+id)?.value.trim()||"";
+  const L=clone(S.ledger); b.disabled=true;
+  try{
+    if(act==="approve"){
+      L.purchases=L.purchases.filter(x=>x.proposalId!==id);
+      let items=(p.items||[]).filter(i=>i.cost>0);
+      const sum=items.reduce((a,i)=>a+i.cost,0);
+      if(!items.length) items=[{desc:"Proposed total",cost:p.proposedTotal}];
+      else if(p.proposedTotal-sum>0.004) items.push({desc:"Unitemized remainder of proposed total",cost:round2(p.proposedTotal-sum)});
+      items.forEach(i=>L.purchases.push({id:uid("x"),subgroupId:p.subgroupId,desc:`${p.eventName}: ${i.desc}`,amount:round2(i.cost),date:today(),proposalId:id,note:""}));
+      L.decisions[id]={status:"approved",note,at:Date.now()};
+      await saveLedger(L); toast("Approved and added to purchases");
+    }else if(act==="reject"){
+      L.decisions[id]={status:"rejected",note,at:Date.now()}; await saveLedger(L); toast("Rejected");
+    }else if(act==="undo"){
+      const linked=L.purchases.filter(x=>x.proposalId===id).length;
+      if(linked && !armed(b,`Click again to remove ${linked} purchase record${linked>1?"s":""}`)){b.disabled=false;return;}
+      L.purchases=L.purchases.filter(x=>x.proposalId!==id); delete L.decisions[id]; await saveLedger(L); toast("Moved back to pending");
+    }else if(act==="delete"){
+      if(!armed(b,"Click again to delete permanently")){b.disabled=false;return;}
+      await S.db.doc("proposals/"+id).delete(); delete L.decisions[id]; await saveLedger(L); toast("Proposal deleted");
+    }
+  }catch{ b.disabled=false; }
+});
+
+/* ---------- purchases ---------- */
+function renderPurchases(){
+  const L=S.ledger, el=$("#purchBody"); if(!L){el.innerHTML="";return;}
+  const used=usedBy(L);
+  const groups=[...L.subgroups];
+  if(L.purchases.some(p=>!L.subgroups.find(s=>s.id===p.subgroupId))) groups.push({id:"__none",name:"Unassigned",budget:0});
+  el.innerHTML=KEY_HTML+groups.map(sg=>{
+    const rows=L.purchases.filter(p=>sg.id==="__none"?!L.subgroups.find(s=>s.id===p.subgroupId):p.subgroupId===sg.id).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+    const u=rows.reduce((a,p)=>a+(+p.amount||0),0);
+    const split={proj:rows.filter(p=>p.proposalId).reduce((a,p)=>a+(+p.amount||0),0),act:rows.filter(p=>!p.proposalId).reduce((a,p)=>a+(+p.amount||0),0)};
+    return `<div class="sgsec">${gaugeHTML(sg,u,0,split)}<div class="tbl"><div class="tablewrap">${rows.length?`<table>
+      <thead><tr><th>Date</th><th>Description</th><th>From proposal</th><th class="r">Amount</th><th></th></tr></thead><tbody>
+      ${rows.map(p=>`<tr class="${p.proposalId?"src-proj":"src-act"}"><td class="num">${esc(p.date||"—")}</td><td>${esc(p.desc)}${p.note?`<br><span style="color:var(--graphite);font-size:13.5px">${esc(p.note)}</span>`:""}</td>
+        <td>${p.proposalId?(S.props.get(p.proposalId)?esc(S.props.get(p.proposalId).eventName):"Yes"):"—"}</td>
+        <td class="r num">${money(p.amount)}</td><td class="r"><button class="btn small" data-edit="${esc(p.id)}">Edit</button></td></tr>`).join("")}
+      </tbody></table>`:`<p class="empty">No purchases yet.</p>`}</div></div></div>`;
+  }).join("");
+}
+let editing=null;
+function openPurchase(p){
+  editing=p?.id||null;
+  $("#pDlgTitle").textContent=p?"Edit purchase":"Add purchase";
+  $("#d-sub").innerHTML=S.ledger.subgroups.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join("");
+  $("#d-sub").value=p?.subgroupId||S.ledger.subgroups[0]?.id||"";
+  $("#d-desc").value=p?.desc||""; $("#d-date").value=p?.date||today(); $("#d-amt").value=p?.amount??""; $("#d-note").value=p?.note||"";
+  const dd=$("#d-del"); clearTimeout(dd._t); delete dd.dataset.armed; dd.textContent="Delete purchase"; dd.hidden=!p; $("#pDlg").showModal();
+}
+$("#addPurchase").onclick=()=>openPurchase(null);
+$("#purchBody").addEventListener("click",e=>{const b=e.target.closest("[data-edit]");if(b)openPurchase(S.ledger.purchases.find(p=>p.id===b.dataset.edit))});
+$("#d-cancel").onclick=()=>$("#pDlg").close();
+$("#pDlgForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const L=clone(S.ledger);
+  const rec={subgroupId:$("#d-sub").value,desc:$("#d-desc").value.trim(),date:$("#d-date").value,amount:round2($("#d-amt").value),note:$("#d-note").value.trim()};
+  if(editing){ const i=L.purchases.findIndex(p=>p.id===editing); L.purchases[i]={...L.purchases[i],...rec}; }
+  else L.purchases.push({id:uid("x"),proposalId:null,...rec});
+  $("#pDlg").close();
+  try{ await saveLedger(L); toast(editing?"Purchase updated":"Purchase added"); }catch{}
+});
+$("#d-del").onclick=async()=>{
+  if(!armed($("#d-del"),"Click again to delete")) return;
+  const L=clone(S.ledger); L.purchases=L.purchases.filter(p=>p.id!==editing); $("#pDlg").close();
+  try{ await saveLedger(L); toast("Purchase deleted"); }catch{}
+};
+
+/* ---------- budgets ---------- */
+let budDraft=null;
+function renderBudgets(force){
+  if(!S.ledger) return;
+  if(budDraft && !force) return;
+  budDraft=clone(S.ledger.subgroups).map(s=>({...s,keywords:kwOf(s)})); drawBud();
+}
+function drawBud(){
+  const used=usedBy(S.ledger);
+  $("#budRows").innerHTML=budDraft.map((s,i)=>`<div class="budcard"><div class="budrow">
+    <input type="text" aria-label="Subgroup name" placeholder="Subgroup name" value="${esc(s.name)}" data-i="${i}" data-k="name" required>
+    <input type="number" aria-label="Annual budget for ${esc(s.name)}" step="0.01" min="0" value="${esc(s.budget)}" data-i="${i}" data-k="budget" required>
+    <button type="button" class="btn small" data-rm="${i}" ${used[s.id]?`disabled title="Has purchases recorded"`:""}>Remove</button></div>
+    <label class="kwlabel" for="kw-${i}">CSV keywords, separated by commas</label>
+    <input type="text" id="kw-${i}" placeholder="e.g. philz, coffee chat" value="${esc((s.keywords||[]).join(", "))}" data-i="${i}" data-k="keywords"></div>`).join("");
+  $("#budTotal").textContent="Total "+money(budDraft.reduce((a,s)=>a+(+s.budget||0),0));
+}
+$("#budRows").addEventListener("input",e=>{const t=e.target;if(t.dataset.k){budDraft[t.dataset.i][t.dataset.k]=t.dataset.k==="budget"?Number(t.value):t.dataset.k==="keywords"?t.value.split(",").map(x=>x.trim()).filter(Boolean):t.value;$("#budTotal").textContent="Total "+money(budDraft.reduce((a,s)=>a+(+s.budget||0),0));}});
+$("#budRows").addEventListener("click",e=>{const b=e.target.closest("[data-rm]");if(b){budDraft.splice(+b.dataset.rm,1);drawBud();}});
+$("#addSg").onclick=()=>{budDraft.push({id:uid("sg"),name:"",budget:0,keywords:[]});drawBud();$$("#budRows input[data-k=name]").pop().focus();};
+$("#budForm").addEventListener("submit",async e=>{
+  e.preventDefault(); const L=clone(S.ledger);
+  L.subgroups=budDraft.map(s=>({id:s.id,name:s.name.trim(),budget:round2(s.budget),keywords:[...new Set((s.keywords||[]).map(k=>k.toLowerCase()))]}));
+  try{ await saveLedger(L); budDraft=null; renderBudgets(true); toast("Allocations saved"); $("#budErr").textContent=""; }
+  catch{ $("#budErr").textContent="Allocations weren’t saved. Try again."; }
+});
+/* ---------- CSV import ---------- */
+const DEFAULT_KW={coffee:["breakfast","coffee chat","coffee and pastries"],fall:["fall reception","fall welcome reception","welcome reception"],seminar:["seminar"],social:["social","pool party"],outreach:["outreach","recruitment","tabling","stickers"]};
+function kwOf(s){ return Array.isArray(s.keywords) ? s.keywords : (DEFAULT_KW[s.id]||[]); }
+let CSV=null;
+const drop=$("#drop");
+["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over")}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));
+drop.addEventListener("drop",e=>{const f=e.dataTransfer.files?.[0]; if(f) loadCSV(f);});
+$("#csvFile").addEventListener("change",e=>{const f=e.target.files?.[0]; if(f) loadCSV(f); e.target.value="";});
+
+function guessCol(headers,re){ return headers.find(h=>re.test(h)) || ""; }
+function startCSV(name,headers,data){
+  if(!headers.length||!data.length){ $("#csvErr").textContent="No transactions were found in that file. Use the account statement export, which has date, reference and withdrawal columns."; return; }
+  const has=h=>headers.find(x=>x.trim().toLowerCase()===h)||"";
+  const vso=has("reference")&&has("withdrawal");
+  CSV={ name, headers, data, from:"",
+    map: vso ? {desc:has("reference"),amt:has("withdrawal"),date:has("date"),where:"desc"}
+      : { desc:guessCol(headers,/desc|memo|merchant|payee|name|details|item|vendor/i)||headers[0],
+          amt:guessCol(headers,/amount|debit|cost|total|price|spent|charge/i),
+          date:guessCol(headers,/date|posted/i), where:"desc" },
+    abs:true, assign:new Map() };
+  analyzeCSV(true); renderCSV();
+}
+function parseStatementHTML(text){
+  const doc=new DOMParser().parseFromString(text,"text/html");
+  const cellText=c=>c.textContent.replace(/\s+/g," ").trim();
+  let headers=null; const data=[];
+  for(const tr of doc.querySelectorAll("tr")){
+    const cells=[...tr.children].filter(c=>c.tagName==="TD"||c.tagName==="TH").map(cellText);
+    if(!headers){ const low=cells.map(c=>c.toLowerCase()); if(low.includes("reference")&&low.includes("withdrawal")) headers=cells; continue; }
+    if(cells.length!==headers.length||cells.every(c=>!c)) continue;
+    const o={}; headers.forEach((h,i)=>o[h]=cells[i]); data.push(o);
+  }
+  return {headers:headers||[],data};
+}
+async function loadCSV(file){
+  $("#csvErr").textContent="";
+  let text; try{ text=await file.text(); }catch{ $("#csvErr").textContent="That file couldn’t be opened."; return; }
+  if(/<table[\s>]/i.test(text)){ const r=parseStatementHTML(text); startCSV(file.name,r.headers,r.data); return; }
+  if(/\.xlsx?$/i.test(file.name)){ $("#csvErr").textContent="This spreadsheet isn’t in the account statement format. Export the statement again from VSO, or save it as a CSV."; return; }
+  if(!window.Papa){ $("#csvErr").textContent="The CSV reader didn’t load. Check your connection and reload the page."; return; }
+  Papa.parse(text,{header:true,skipEmptyLines:"greedy",complete:res=>startCSV(file.name,(res.meta.fields||[]).filter(h=>h!==""),res.data),
+    error:()=>{ $("#csvErr").textContent="That file couldn’t be read as a CSV."; }});
+}
+function parseAmt(v){
+  let s=String(v??"").trim(); if(!s) return NaN;
+  const neg=/^\(.*\)$/.test(s)||/^-/.test(s)||/-$/.test(s);
+  s=s.replace(/[^0-9.]/g,""); const n=parseFloat(s); if(isNaN(n)) return NaN;
+  return neg?-n:n;
+}
+function normDate(v){
+  const s=String(v??"").trim(); if(!s) return "";
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
+  const m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+  if(m){ const y=m[3].length===2?"20"+m[3]:m[3]; return `${y}-${m[1].padStart(2,"0")}-${m[2].padStart(2,"0")}`; }
+  const d=new Date(s); return isNaN(d)?s:d.toISOString().slice(0,10);
+}
+function analyzeCSV(resetAssign){
+  const {map}=CSV, sgs=S.ledger?.subgroups||[];
+  const existing=new Set((S.ledger?.purchases||[]).map(p=>p.importKey).filter(Boolean));
+  const occ={};
+  CSV.rows=CSV.data.map((r,i)=>{
+    const desc=String(r[map.desc]??"").trim();
+    let amount=map.amt?parseAmt(r[map.amt]):NaN; if(CSV.abs&&!isNaN(amount)) amount=Math.abs(amount);
+    const date=map.date?normDate(r[map.date]):"";
+    const text=(map.where==="all"?Object.values(r).join(" "):desc).toLowerCase();
+    const hits=[];
+    for(const s of sgs) for(const k of kwOf(s)){ if(k&&text.includes(k.toLowerCase())) hits.push({id:s.id,k}); }
+    hits.sort((a,b)=>b.k.length-a.k.length);
+    const sgHits=[...new Set(hits.map(h=>h.id))];
+    let key=`${date}|${desc}|${round2(amount)}`; occ[key]=(occ[key]||0)+1; if(occ[key]>1) key+="#"+occ[key];
+    const zero=!isNaN(amount)&&round2(amount)===0;
+    const early=!!(CSV.from&&date&&date<CSV.from);
+    return {i,desc:desc.replace(/^Journal Import \d+:\s*/i,""),amount:round2(amount),bad:isNaN(amount)||zero,zero,early,date,hit:hits[0]||null,multi:sgHits.length>1,dup:existing.has(key),key};
+  });
+  if(resetAssign){ CSV.assign=new Map(); }
+  for(const r of CSV.rows) if(!CSV.assign.has(r.i)) CSV.assign.set(r.i, (r.dup||r.bad||r.early||!r.hit)?"":r.hit.id);
+}
+function renderCSV(){
+  const el=$("#csvArea"); if(!CSV){el.innerHTML="";return;}
+  const sgs=S.ledger?.subgroups||[];
+  const opt=(h,sel)=>`<option value="" ${sel===""?"selected":""}>None</option>`+h.map(x=>`<option ${x===sel?"selected":""}>${esc(x)}</option>`).join("");
+  const totals={}; let n=0, sum=0, skipped=0;
+  for(const r of CSV.rows){ const a=CSV.assign.get(r.i); if(a&&!r.bad&&r.amount){ totals[a]=(totals[a]||0)+r.amount; n++; sum+=r.amount; } else skipped++; }
+  const unmatched=CSV.rows.filter(r=>!r.hit&&!r.dup&&!r.bad&&!r.early).length;
+  el.innerHTML=`<div class="card" style="margin-top:18px">
+    <h3 style="font-size:20px;margin-bottom:12px;font-variation-settings:'wdth' 85">${esc(CSV.name)} · ${CSV.rows.length} rows</h3>
+    <div class="mapgrid">
+      <div class="field"><label for="m-desc">Description column</label><select id="m-desc" data-m="desc">${opt(CSV.headers,CSV.map.desc)}</select></div>
+      <div class="field"><label for="m-amt">Amount column</label><select id="m-amt" data-m="amt">${opt(CSV.headers,CSV.map.amt)}</select></div>
+      <div class="field"><label for="m-date">Date column</label><select id="m-date" data-m="date">${opt(CSV.headers,CSV.map.date)}</select></div>
+      <div class="field"><label for="m-where">Look for keywords in</label><select id="m-where" data-m="where"><option value="desc" ${CSV.map.where==="desc"?"selected":""}>Description column</option><option value="all" ${CSV.map.where==="all"?"selected":""}>Every column</option></select></div>
+      <div class="field"><label for="m-from">Only rows on or after</label><input type="date" id="m-from" value="${esc(CSV.from)}"></div>
+    </div>
+    <label class="check"><input type="checkbox" id="m-abs" ${CSV.abs?"checked":""}> Count negative amounts as spending (most bank and card exports show charges as negatives)</label>
+    ${!CSV.map.amt?`<p class="err">Choose the column that holds the amounts.</p>`:""}
+  </div>
+  <div class="csvsum num">
+    ${sgs.map(s=>`<div><span>${esc(s.name)}</span><b>${money(totals[s.id]||0)}</b></div>`).join("")}
+    <div><span>Not imported</span><b>${skipped} rows</b></div>
+  </div>
+  ${unmatched?`<p class="msg warn">${unmatched} row${unmatched>1?"s":""} matched no keywords. Pick a subgroup for any that belong to the club budget, or leave them on “Don’t import”.</p>`:""}
+  <div class="card tablewrap" style="padding:6px 10px"><table>
+    <thead><tr><th>Date</th><th>Description</th><th class="r">Amount</th><th>Match</th><th>Import to</th></tr></thead>
+    <tbody>${CSV.rows.map(r=>{
+      const tag=r.dup?`<span class="tag dup">Already imported</span>`:r.bad?`<span class="tag miss">${r.zero?"No withdrawal":"No amount"}</span>`:r.early?`<span class="tag dup">Before start date</span>`:r.multi?`<span class="tag multi">Several matches; picked “${esc(r.hit.k)}”</span>`:r.hit?`<span class="tag hit">“${esc(r.hit.k)}”</span>`:`<span class="tag miss">No keyword</span>`;
+      const a=CSV.assign.get(r.i);
+      return `<tr><td class="num">${esc(r.date||"—")}</td><td>${esc(r.desc||"—")}</td><td class="r num">${r.bad?"—":money(r.amount)}</td><td>${tag}</td>
+        <td><select data-row="${r.i}" aria-label="Subgroup for row ${r.i+1}" ${r.bad?"disabled":""}><option value="">Don’t import</option>${sgs.map(s=>`<option value="${esc(s.id)}" ${a===s.id?"selected":""}>${esc(s.name)}</option>`).join("")}</select></td></tr>`;}).join("")}
+    </tbody></table></div>
+  <div class="actions" style="margin-top:16px">
+    <button class="btn primary" id="csvImport" ${n?"":"disabled"}>Import ${n} purchase${n===1?"":"s"} (${money(sum)})</button>
+    <button class="btn" id="csvCancel">Discard file</button>
+  </div>`;
+}
+$("#csvArea").addEventListener("change",async e=>{
+  const t=e.target;
+  if(t.dataset.m){ CSV.map[t.dataset.m]=t.value; analyzeCSV(true); renderCSV(); }
+  else if(t.id==="m-abs"){ CSV.abs=t.checked; analyzeCSV(false); renderCSV(); }
+  else if(t.id==="m-from"){ CSV.from=t.value; analyzeCSV(true); renderCSV(); }
+  else if(t.dataset.row){ CSV.assign.set(+t.dataset.row,t.value); renderCSV(); }
+});
+$("#csvArea").addEventListener("click",async e=>{
+  if(e.target.id==="csvCancel"){ CSV=null; renderCSV(); return; }
+  if(e.target.id!=="csvImport") return;
+  const L=clone(S.ledger); let n=0;
+  for(const r of CSV.rows){
+    const a=CSV.assign.get(r.i); if(!a||r.bad||!r.amount) continue;
+    L.purchases.push({id:uid("x"),subgroupId:a,desc:r.desc||"Imported purchase",amount:r.amount,date:r.date||today(),proposalId:null,note:`Imported from ${CSV.name}`,importKey:r.key}); n++;
+  }
+  e.target.disabled=true;
+  try{ await saveLedger(L); toast(`Imported ${n} purchase${n===1?"":"s"}`); CSV=null; renderCSV();
+    $$("[data-ftab]").find(b=>b.dataset.ftab==="purchases").click(); }
+  catch{ e.target.disabled=false; }
+});
+/* ---------- backup / restore ---------- */
+$("#bkDown").onclick=async()=>{
+  if(!S.ledger) return;
+  const blob=new Blob([JSON.stringify({format:"megm-backup",version:1,savedAt:Date.now(),ledger:await aesEnc(S.fkey,S.ledger)})],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`megm-backup-${today()}.json`; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+};
+$("#bkFile").addEventListener("change",async e=>{
+  const f=e.target.files?.[0]; e.target.value=""; if(!f) return;
+  $("#bkErr").textContent="";
+  try{
+    const b=JSON.parse(await f.text());
+    if(b.format!=="megm-backup"||!b.ledger) throw new Error("format");
+    let L; try{ L=await aesDec(S.fkey,b.ledger); }catch{ $("#bkErr").textContent="That backup was made with a different finance password, so it can’t be restored here."; return; }
+    if(!Array.isArray(L.purchases)||!Array.isArray(L.subgroups)) throw new Error("shape");
+    L.decisions=L.decisions||{};
+    await saveLedger(L); budDraft=null; renderBudgets(true);
+    toast(`Restored ${L.purchases.length} purchases`);
+  }catch{ $("#bkErr").textContent="That file isn’t a MEGM backup."; }
+});
+</script>
+</body>
+</html>
